@@ -59,7 +59,7 @@ $(function() {
 
 		  <form name="user-connectorForm" method="post" action="user-connector-list.do" class="form-inline">
 		    <label for="user-connector_name"><spring:message code='user-connector.user-connector.list.search.name' text='名称'/>:</label>
-		    <input type="text" id="user-connector_name" name="filter_LIKES_name" value="${param.filter_LIKES_name}" class="form-control">
+		    <input type="text" id="user-connector_name" name="filter_LIKES_username" value="${param.filter_LIKES_name}" class="form-control">
 			<button class="btn btn-default a-search" onclick="document.user-connectorForm.submit()">查询</button>&nbsp;
 		  </form>
 

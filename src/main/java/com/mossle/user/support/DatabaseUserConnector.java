@@ -132,8 +132,9 @@ public class DatabaseUserConnector implements UserConnector {
         StringBuilder buff = new StringBuilder();
         List<Object> paramList = new ArrayList<Object>();
         boolean checkWhere = sqlPagedQuerySelect.toLowerCase().indexOf("where") == -1;
+        HashMap<String, String> propertyNames = new HashMap<String, String>();
         PropertyFilterUtils.buildConfigurations(propertyFilters, buff,
-                paramList, checkWhere);
+                paramList, checkWhere,propertyNames);
         logger.debug("propertyFilters : {}", propertyFilters);
         logger.debug("buff : {}", buff);
         logger.debug("paramList : {}", paramList);
@@ -141,6 +142,12 @@ public class DatabaseUserConnector implements UserConnector {
 
         String sql = buff.toString();
         String countSql = sqlPagedQueryCount + " " + sql;
+        buff = new StringBuilder();
+        paramList = new ArrayList<Object>();
+        propertyNames.put("username", "AI");
+        PropertyFilterUtils.buildConfigurations(propertyFilters, buff,
+                paramList, checkWhere,propertyNames);
+        sql = buff.toString();
         String selectSql = sqlPagedQuerySelect + " " + sql + " limit "
                 + page.getStart() + "," + page.getPageSize();
         logger.debug("countSql : {}", countSql);

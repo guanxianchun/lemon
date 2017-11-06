@@ -1,7 +1,9 @@
 package com.mossle.core.query;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PropertyFilterUtils {
     protected PropertyFilterUtils() {
@@ -9,25 +11,26 @@ public class PropertyFilterUtils {
 
     public static void buildConfigurations(
             Collection<PropertyFilter> propertyFilters, StringBuilder buff,
-            List<Object> params) {
-        buildConfigurations(propertyFilters, buff, params, true);
+            List<Object> params,Map<String, String> propertyNameTablePrefixs) {
+        buildConfigurations(propertyFilters, buff, params, true,propertyNameTablePrefixs);
     }
 
     public static void buildConfigurations(
             Collection<PropertyFilter> propertyFilters, StringBuilder buff,
-            List<Object> params, boolean checkWhere) {
+            List<Object> params, boolean checkWhere,Map<String, String> propertyNameTablePrefixs) {
         for (PropertyFilter propertyFilter : propertyFilters) {
-            buildConfiguration(propertyFilter, buff, params, checkWhere);
+            buildConfiguration(propertyFilter, buff, params, checkWhere,propertyNameTablePrefixs);
         }
     }
 
     public static void buildConfiguration(PropertyFilter propertyFilter,
-            StringBuilder buff, List<Object> params) {
-        buildConfiguration(propertyFilter, buff, params, true);
+            StringBuilder buff, List<Object> params,Map<String, String> propertyNameTablePrefixs) {
+        buildConfiguration(propertyFilter, buff, params, true,propertyNameTablePrefixs);
     }
 
     public static void buildConfiguration(PropertyFilter propertyFilter,
-            StringBuilder buff, List<Object> params, boolean checkWhere) {
+            StringBuilder buff, List<Object> params, boolean checkWhere,Map<String, String> propertyNameTablePrefixs) {
+    	
         if (checkWhere
                 && (buff.toString().toLowerCase().indexOf("where") == -1)) {
             buff.append(" where ");
@@ -41,65 +44,108 @@ public class PropertyFilterUtils {
 
         switch (matchType) {
         case EQ:
-            buff.append(propertyName).append("=?");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append("=?");
+			}else{
+				buff.append(propertyName).append("=?");
+			}
             params.add(propertyValue);
 
             break;
 
         case NOT:
-            buff.append(propertyName).append("<>?");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append("=?");
+			}else{
+				buff.append(propertyName).append("<>?");
+			}
             params.add(propertyValue);
 
             break;
 
         case LIKE:
-            buff.append(propertyName).append(" like ?");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append(" like ?");
+			}else{
+				buff.append(propertyName).append(" like ?");
+			}
             params.add("%" + propertyValue + "%");
 
             break;
 
         case LE:
-            buff.append(propertyName).append("<=?");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append("<=?");
+			}else{
+				buff.append(propertyName).append("<=?");
+			}
             params.add(propertyValue);
 
             break;
 
         case LT:
-            buff.append(propertyName).append("<?");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append("<?");
+			}else{
+				buff.append(propertyName).append("<?");
+			}
             params.add(propertyValue);
 
             break;
 
         case GE:
-            buff.append(propertyName).append(">=?");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append(">=?");
+			}else{
+				buff.append(propertyName).append(">=?");
+			}
             params.add(propertyValue);
 
             break;
 
         case GT:
-            buff.append(propertyName).append(">?");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append(">?");
+			}else{
+				buff.append(propertyName).append(">?");
+			}
             params.add(propertyValue);
 
             break;
 
         case IN:
-            buff.append(propertyName).append("in (?)");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append(" in (?)");
+			}else{
+				buff.append(propertyName).append("in (?)");
+			}
             params.add(propertyValue);
 
             break;
 
         case INL:
-            buff.append(propertyName).append(" is null");
-
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append(" is null");
+			}else{
+				buff.append(propertyName).append(" is null");
+			}
             break;
 
         case NNL:
-            buff.append(propertyName).append(" is not null");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append(" is not null");
+			}else{
+				buff.append(propertyName).append(" is not null");
+			}
 
             break;
 
         default:
-            buff.append(propertyName).append("=?");
+        	if (propertyNameTablePrefixs.containsKey(propertyName)) {
+        		buff.append(propertyNameTablePrefixs.get(propertyName)).append(".").append(propertyName).append("=?");
+			}else{
+				buff.append(propertyName).append("=?");
+			}
             params.add(propertyValue);
 
             break;
